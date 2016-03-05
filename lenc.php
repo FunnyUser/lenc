@@ -14,15 +14,12 @@ require_once "/usr/local/ispconfig/server/lib/mysql_clientdb.conf";
 #  /usr/local/ispconfig/server/lib/config.inc.php
 
 $db = mysqli_connect($conf['db_host'], $conf['db_user'], $conf['db_password'], $conf['db_database']) or die( "Can't connect to DB.\n");
-#$db = mysqli_connect("localhost", "ispconfig", "d176144c6fce59dfd657b793f89f527b", "dbispconfig") or die( "Can't connect to DB.\n");
-#$db = mysqli_connect("localhost", "c1isp", "77rNOJgb", "c1isp") or die( "Can't connect to DB.\n");
 
-# $selected = mysqli_select_db($db, 'c1isp') or die("Strange shit happens: can't select DB.\n");
 $selected = mysqli_select_db($db, 'dbispconfig') or die("Strange shit happens: can't select DB.\n");
 
 if ($argv[1] !== "cron")
         echo letsencrypt($db,$argv[1],$argv);
-  else {$sql = "SELECT web_domain.domain FROM web_domain WHERE web_domain.ssl ='y'";
+  else {$sql = "SELECT web_domain.domain FROM web_domain WHERE web_domain.ssl ='y' AND web_domain.active = 'y'";
         $result = mysqli_query($db, $sql) or die("Strange: query failed.\n") ;
         if (mysqli_num_rows($result)<1) die("No SSL-enabled domains. Nothing to do.\n");
         while ($row = mysqli_fetch_assoc($result))
